@@ -12,6 +12,6 @@ module Authentication
   end
 
   def head_unauthorized
-    return head(:unauthorized) unless current_user
+    head(:unauthorized) unless current_user
   end
 end

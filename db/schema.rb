@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_04_104626) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_04_111445) do
   create_table "announcements", force: :cascade do |t|
     t.integer "user_id", null: false
     t.string "description"
@@ -20,10 +20,23 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_04_104626) do
     t.index ["user_id"], name: "index_announcements_on_user_id"
   end
 
+  create_table "responses", force: :cascade do |t|
+    t.integer "announcement_id", null: false
+    t.integer "user_id", null: false
+    t.integer "price"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["announcement_id"], name: "index_responses_on_announcement_id"
+    t.index ["user_id"], name: "index_responses_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
   add_foreign_key "announcements", "users"
+  add_foreign_key "responses", "announcements"
+  add_foreign_key "responses", "users"
 end

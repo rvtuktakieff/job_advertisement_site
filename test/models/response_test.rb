@@ -5,7 +5,7 @@ class ResponseTest < ActiveSupport::TestCase
     @response = create(:response)
   end
 
-  attributes = [:price, :user_id, :announcement_id, :status]
+  attributes = [:price, :status]
 
   attributes.each do |attr|
     test "should have #{attr}" do
@@ -28,6 +28,12 @@ class ResponseTest < ActiveSupport::TestCase
     assert_equal @response.valid?, false
 
     @response.price = 10001
+
+    assert_equal @response.valid?, false
+  end
+
+  test 'user must not be the announcement owner' do
+    @response.user_id = @response.announcement.user_id
 
     assert_equal @response.valid?, false
   end

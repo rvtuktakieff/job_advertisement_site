@@ -1,5 +1,12 @@
 Rails.application.routes.draw do
   resources :users
+
+  resources :announcements, only: :create do
+    get '/my', to: "announcements#my", on: :collection
+    get '/active', to: "announcements#active", on: :collection
+    post '/cancel', to: "announcements#cancel", on: :member
+
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

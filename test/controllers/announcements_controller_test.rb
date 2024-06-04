@@ -9,7 +9,12 @@ class AnnouncementsControllerTest < ActionDispatch::IntegrationTest
   test 'get /announcements/my' do
     get '/announcements/my', headers: { "Authorization": "Bearer #{@user.id}" }
 
-    announcements = Announcement.where(user_id: @user.id)
+    announcements = Announcement.where(user_id: @user.id).
+      map do |el|
+      el.attributes.except('updated_at', 'created_at').
+        merge({ responses: el.responses })
+    end
+
     data = JSON.parse(response.body)
 
     assert_response :ok
@@ -33,11 +38,11 @@ class AnnouncementsControllerTest < ActionDispatch::IntegrationTest
   test 'get /announcements/active' do
     get '/announcements/active'
 
-    announcements = Announcement.active
+    announcements = Announcement.active.map { |el| el.attributes.except('updated_at', 'created_at') }.to_json
     data = JSON.parse(response.body)
 
     assert_response :ok
-    assert_equal data, JSON.parse(announcements.to_json)
+    assert_equal data, JSON.parse(announcements)
   end
 
   test 'post /announcements with token' do

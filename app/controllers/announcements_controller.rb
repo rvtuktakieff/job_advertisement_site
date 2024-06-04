@@ -15,7 +15,7 @@ class AnnouncementsController < ApplicationController
   def active
     announcements = Announcement.active
 
-    render(json: announcements, status: :ok)
+    render(json: announcements, include: [], status: :ok)
   end
 
   def create

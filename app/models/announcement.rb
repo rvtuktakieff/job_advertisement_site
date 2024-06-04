@@ -2,6 +2,7 @@ class Announcement < ApplicationRecord
   include AASM
 
   belongs_to :user
+  has_many :responses
 
   validates :description, :status, presence: true
   validates :description, length: { maximum: 1000 }

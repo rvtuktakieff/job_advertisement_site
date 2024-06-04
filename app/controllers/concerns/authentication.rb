@@ -10,4 +10,8 @@ module Authentication
   def current_user
     @user
   end
+
+  def head_unauthorized
+    return head(:unauthorized) unless current_user
+  end
 end

@@ -5,11 +5,7 @@ class AnnouncementsController < ApplicationController
   def my
     announcement = Announcement.where(user_id: current_user.id)
 
-    if announcement.empty?
-      head(:forbidden)
-    else
-      render(json: announcement, status: :ok)
-    end
+    announcement.empty? ? head(:forbidden) : render(json: announcement, status: :ok)
   end
 
   def active
@@ -22,11 +18,7 @@ class AnnouncementsController < ApplicationController
     announcement = Announcement.new(announcement_params)
     announcement.user_id = current_user&.id
 
-    if announcement.save
-      render(json: announcement, status: :created)
-    else
-      head(:bad_request)
-    end
+    announcement.save ? render(json: announcement, status: :created) : head(:bad_request)
   end
 
   def cancel

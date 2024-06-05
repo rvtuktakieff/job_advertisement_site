@@ -1,11 +1,11 @@
-#Ruby + JSON RESTful API: приложение с объявлениями о работе#
+# Ruby + JSON RESTful API: приложение с объявлениями о работе #
 
 https://github.com/aristofun/webdevdao/blob/master/test_assignments/job_advertisement_site.md
 
 docker compose up - запуск приложения  
 docker compose run web bin/rails test - запуск тестов  
 
-Эндпоинты:  
+# Эндпоинты: #  
 Создание пользователя - POST localhost:3000/users  
 Создание объявления - POST localhost:3000/announcements  
 Пользователь окликается на объявление - POST localhost:3000/announcements/:announcement_id/responses  

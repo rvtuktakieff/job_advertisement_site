@@ -6,15 +6,15 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
     @announcement = create(:announcement, user_id: @user_announcement.id)
     @user_response = User.create
     @resp = create(:response, announcement_id: @announcement.id, user_id: @user_response.id)
+    @response_params = { price: 2000 }
   end
 
   test 'post /announcements/:id/responses with token' do
-    response_params = { price: 2000 }
-    post "/announcements/#{@announcement.id}/responses", params: { response: response_params },
+    post "/announcements/#{@announcement.id}/responses", params: { response: @response_params },
                                                          headers: { "Authorization": "Bearer #{@user_response.id}" }
 
     data = JSON.parse(response.body)
-    resp = data.merge(response_params.stringify_keys)
+    resp = data.merge(@response_params.stringify_keys)
 
     assert_response :created
     assert_equal data, resp
@@ -28,27 +28,24 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'post /announcements/:id/responses on non active announcement' do
-    response_params = { price: 2000 }
     non_active_announcement = create(:announcement)
     non_active_announcement.cancel!
 
-    post "/announcements/#{non_active_announcement.id}/responses", params: { response: response_params },
+    post "/announcements/#{non_active_announcement.id}/responses", params: { response: @response_params },
                                                                    headers: { "Authorization": "Bearer #{@user_response.id}" }
 
     assert_response :bad_request
   end
 
   test 'post /announcements/:id/responses witn invalid token' do
-    response_params = { price: 2000 }
-    post "/announcements/#{@announcement.id}/responses", params: { response: response_params },
+    post "/announcements/#{@announcement.id}/responses", params: { response: @response_params },
                                                          headers: { "Authorization": "Bearer #{@user_announcement.id}" }
 
     assert_response :bad_request
   end
 
   test 'post /announcements/:id/responses without token' do
-    response_params = { price: 2000 }
-    post "/announcements/#{@announcement.id}/responses", params: { response: response_params }
+    post "/announcements/#{@announcement.id}/responses", params: { response: @response_params }
 
     assert_response :unauthorized
   end
@@ -71,7 +68,7 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
     post "/announcements/#{@announcement.id}/responses/#{@resp.id}/accept",
          headers: { "Authorization": "Bearer #{@user_announcement.id + 1}" }
 
-    assert_response :bad_request
+    assert_response :forbidden
   end
 
   test 'post /announcements/:announcements_id/responses/:id/accept without token' do
@@ -96,7 +93,7 @@ class ResponsesControllerTest < ActionDispatch::IntegrationTest
     post "/announcements/#{@announcement.id}/responses/#{@resp.id}/cancel",
          headers: { "Authorization": "Bearer #{@user_announcement.id}" }
 
-    assert_response :bad_request
+    assert_response :forbidden
   end
 
   test 'post /announcements/:announcements_id/responses/:id/cancel without token' do

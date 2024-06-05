@@ -13,7 +13,8 @@ class ResponsesController < ApplicationController
   end
 
   def accept
-    return head(:bad_request) unless @announcement.user_id == current_user.id
+    return head(:forbidden) unless @announcement.user_id == current_user.id
+    return head(:bad_request) unless @resp.may_accept?
 
     @resp.accept!
     @announcement.close!
@@ -21,7 +22,8 @@ class ResponsesController < ApplicationController
   end
 
   def cancel
-    return head(:bad_request) if @announcement.user_id == current_user.id
+    return head(:forbidden) if @announcement.user_id == current_user.id
+    return head(:bad_request) unless @resp.may_cancel?
 
     @resp.cancel!
     head(:ok)

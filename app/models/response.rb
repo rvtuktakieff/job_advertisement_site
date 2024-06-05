@@ -12,7 +12,7 @@ class Response < ApplicationRecord
     state :pending, initial: true
     state :cancelled
     state :declined
-    state :accepted
+    state :accepted, before_enter: -> { announcement.close! }
 
     event :cancel do
       transitions from: :pending, to: :cancelled

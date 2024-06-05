@@ -10,7 +10,7 @@ class Announcement < ApplicationRecord
   aasm column: 'status' do
     state :active, initial: true
     state :cancelled, before_enter: -> { responses.each(&:decline!) }
-    state :closed
+    state :closed, before_enter: -> { responses.each { |resp| resp.decline! unless resp.accepted? } }
 
     event :cancel do
       transitions from: :active, to: :cancelled

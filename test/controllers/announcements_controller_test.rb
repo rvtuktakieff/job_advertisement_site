@@ -73,18 +73,18 @@ class AnnouncementsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test 'post /announcements/:id/cancel with token' do
-    create(:response, announcement_id: @announcement.id)
+    assert_equal @announcement.may_cancel?, true
+
+    resp = create(:response, announcement_id: @announcement.id)
 
     post "/announcements/#{@announcement.id}/cancel", headers: { 'Authorization': "Bearer #{@user.id}" }
 
-    @announcement.responses.each do |resp|
-      assert_equal resp.declined?, true
-    end
-
     @announcement.reload
+    resp.reload
 
     assert_response :ok
     assert_equal @announcement.cancelled?, true
+    assert_equal resp.declined?, true
   end
 
   test 'post /announcements/:id/cancel with invalid token' do

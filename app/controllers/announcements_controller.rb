@@ -25,6 +25,7 @@ class AnnouncementsController < ApplicationController
     announcement = Announcement.find_by(id: params[:id])
 
     return head(:forbidden) unless current_user == announcement.user
+    return head(:bad_request) unless announcement.may_cancel?
 
     announcement.cancel!
     head(:ok)

@@ -5,7 +5,11 @@ Rails.application.routes.draw do
     get '/my', to: "announcements#my", on: :collection
     get '/active', to: "announcements#active", on: :collection
     post '/cancel', to: "announcements#cancel", on: :member
-
+    
+    resources :responses, only: :create do
+      post '/accept', to: 'responses#accept', on: :member
+      post '/cancel', to: 'responses#cancel', on: :member
+    end
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
